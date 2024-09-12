@@ -5,6 +5,8 @@ import Cards from "./components/cards/Cards";
 import { fightPokemons, saveFight } from "./controllers/fights.controller";
 import { Fight } from "./interfaces/fight";
 import { Pokemon } from "./interfaces/pokemon";
+import PokemonLogo from "./assets/pokemonLogo.png"
+import Pokeball from "./assets/pokeball.png"
 
 
 const style = {
@@ -96,7 +98,7 @@ export default function App() {
             <Typography fontSize={70}>Battle of</Typography>
             <CardMedia
               component="img"
-              image="https://i.ebayimg.com/images/g/7GoAAOSwuWpdmJCJ/s-l400.png"
+              image={PokemonLogo}
               sx={{ width: 'auto'}}
             />
           </Box>
@@ -104,13 +106,13 @@ export default function App() {
           <Box display="flex" alignItems="center" justifyContent="center" gap={2}>
             <CardMedia
               component="img"
-              image="https://images.seeklogo.com/logo-png/52/1/pokemon-pokeball-legue-logo-png_seeklogo-524672.png"
+              image={Pokeball}
               sx={{ width: '5%', objectFit: 'contain' }}
             />
             <Typography fontSize={30}>Select your pokemon!</Typography>
             <CardMedia
               component="img"
-              image="https://images.seeklogo.com/logo-png/52/1/pokemon-pokeball-legue-logo-png_seeklogo-524672.png"
+              image={Pokeball}
               sx={{ width: '5%', objectFit: 'contain' }}
             />
           </Box>
