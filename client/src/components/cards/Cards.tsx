@@ -37,7 +37,6 @@ export default function Cards({pokemon, showStats, choosePokemon, selected }:any
               {pokemon.name}
             </Typography>
             {showStats && <>
-            {/* HP */}
             <Box display="flex" alignItems="center" mb={1}>
               <FavoriteIcon color="error" sx={{ mr: 1 }} />
               <Typography variant="body2" color="text.secondary" sx={{ width: '80px' }}>HP</Typography>
@@ -49,7 +48,6 @@ export default function Cards({pokemon, showStats, choosePokemon, selected }:any
               />
             </Box>
 
-            {/* Attack */}
             <Box display="flex" alignItems="center" mb={1}>
               <FlashOnIcon color="primary" sx={{ mr: 1 }} />
               <Typography variant="body2" color="text.secondary" sx={{ width: '80px' }}>Attack</Typography>
@@ -61,7 +59,6 @@ export default function Cards({pokemon, showStats, choosePokemon, selected }:any
               />
             </Box>
 
-            {/* Defense */}
             <Box display="flex" alignItems="center" mb={1}>
               <SecurityIcon color="secondary" sx={{ mr: 1 }} />
               <Typography variant="body2" color="text.secondary" sx={{ width: '80px' }}>Defense</Typography>
@@ -73,7 +70,6 @@ export default function Cards({pokemon, showStats, choosePokemon, selected }:any
               />
             </Box>
 
-            {/* Speed */}
             <Box display="flex" alignItems="center" mb={1}>
               <DirectionsRunIcon color="warning" sx={{ mr: 1 }} />
               <Typography variant="body2" color="text.secondary" sx={{ width: '80px' }}>Speed</Typography>

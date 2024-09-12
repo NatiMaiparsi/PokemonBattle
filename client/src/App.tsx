@@ -39,7 +39,7 @@ export default function App() {
     getPokemons()
   }, [])
 
-  const choosePokemon = async (e:Pokemon) => {
+  const choosePokemon = async (e: Pokemon) => {
     setSelected(e.id);
     const chosenPokemon = pokemon.filter(p => p.id === e.id)
     setChosenPokemon(chosenPokemon[0])
@@ -47,19 +47,15 @@ export default function App() {
     setDefender(defenderPokemon);
   }
 
-  function selectRandomPokemon(excludePokemonId:string): Promise<Pokemon> {
+  function selectRandomPokemon(excludePokemonId: string): Promise<Pokemon> {
     setLoading(true);
     return new Promise((resolve) => {
-      // Filtra el array para excluir al Pokémon seleccionado
-      const filteredPokemons:Pokemon[] = pokemon.filter(
+      const filteredPokemons: Pokemon[] = pokemon.filter(
         (pokemon) => pokemon.id !== excludePokemonId
       );
+      const randomIndex: number = Math.floor(Math.random() * filteredPokemons.length);
+      const selectedPokemon: Pokemon = filteredPokemons[randomIndex];
 
-      // Selecciona uno de los restantes de forma aleatoria
-      const randomIndex:number = Math.floor(Math.random() * filteredPokemons.length);
-      const selectedPokemon:Pokemon = filteredPokemons[randomIndex];
-
-      // Pausa de 5 segundos antes de resolver la promesa
       setTimeout(() => {
         resolve(selectedPokemon);
         setLoading(false);
@@ -69,62 +65,93 @@ export default function App() {
 
   const startFight = async () => {
     return new Promise((resolve) => {
-    setLoadingFigth(true);
-    setTimeout(() => {
-      resolve(fightPokemons([chosenPokemon, defender]).then(async (res) => {
-        setWinner(res);
-        setShowModal(true);
-        const dataFight:Fight = {
-          firstPokemonId: chosenPokemon.id,
-          firstPokemonName: chosenPokemon.name,
-          secondPokemonId: defender.id,
-          secondPokemonName: defender.name,
-          winnerId: res.id,
-          winnerName: res.name
-      }
-        await saveFight(dataFight)
-      })) 
-      setLoadingFigth(false)
-      setDefender({});
-      setChosenPokemon({});
-      setSelected('');
-    },3000);
-  })
+      setLoadingFigth(true);
+      setTimeout(() => {
+        resolve(fightPokemons([chosenPokemon, defender]).then(async (res) => {
+          setWinner(res);
+          setShowModal(true);
+          const dataFight: Fight = {
+            firstPokemonId: chosenPokemon.id,
+            firstPokemonName: chosenPokemon.name,
+            secondPokemonId: defender.id,
+            secondPokemonName: defender.name,
+            winnerId: res.id,
+            winnerName: res.name
+          }
+          await saveFight(dataFight)
+        }))
+        setLoadingFigth(false)
+        setDefender({});
+        setChosenPokemon({});
+        setSelected('');
+      }, 3000);
+    })
   }
   const handleClose = () => setShowModal(false);
-  return (<Container>
-    <Typography fontSize={80}>Battle of Pokemon</Typography>
-    <Typography fontSize={40}>Select your pokemon!</Typography>
-    <Box display="flex" justifyContent="space-between" gap={2}>
-      {pokemon && pokemon.map((e) =>
-        <Cards pokemon={e} showStats={false} choosePokemon={choosePokemon} selected={selected} />
-      )}
-    </Box>
-    {selected ? 
-    <Box display="flex" justifyContent="space-between" mt={5} gap={2}>
-      <Box >
-        {chosenPokemon?.id && <Cards pokemon={chosenPokemon} showStats={true} choosePokemon={choosePokemon} selected={selected} />}
-      </Box>
-      {loadingFight ? <Box alignContent={'center'}><CircularProgress /></Box> : <Box alignContent={'center'}><Button sx={{height: '40px'}} variant="contained" onClick={startFight}>Fight!</Button></Box>}
-      {loading ? <Box alignContent={'center'}><CircularProgress /></Box> : (defender?.id ? <Cards pokemon={defender} showStats={true} choosePokemon={choosePokemon} selected={defender.id} /> : <Typography>Pokemon</Typography>)}
-    </Box> 
-    : null}
-    <Modal
-        keepMounted
-        open={showModal}
-        onClose={handleClose}
-        aria-labelledby="keep-mounted-modal-title"
-        aria-describedby="keep-mounted-modal-description"
-      >
-        <Box sx={style}>
-        <CardMedia
-            component="img"
-            sx={{ width: '100%', objectFit: 'contain' }}
-            image={winner?.imageUrl}/>
-          <Typography id="keep-mounted-modal-title" variant="h6" component="h2">
-           {winner?.name + " wins!"}
-          </Typography>
+  return (
+    <Container fixed>
+      <Box display="flex" flexDirection="column" alignContent="center" alignItems="center" gap={2} >
+        <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center">
+          <Box display="flex" alignItems="center" justifyContent="center">
+            <Typography fontSize={70}>Battle of</Typography>
+            <CardMedia
+              component="img"
+              image="https://i.ebayimg.com/images/g/7GoAAOSwuWpdmJCJ/s-l400.png"
+              sx={{ width: 'auto'}}
+            />
+          </Box>
+          {!selected ? 
+          <Box display="flex" alignItems="center" justifyContent="center" gap={2}>
+            <CardMedia
+              component="img"
+              image="https://images.seeklogo.com/logo-png/52/1/pokemon-pokeball-legue-logo-png_seeklogo-524672.png"
+              sx={{ width: '5%', objectFit: 'contain' }}
+            />
+            <Typography fontSize={30}>Select your pokemon!</Typography>
+            <CardMedia
+              component="img"
+              image="https://images.seeklogo.com/logo-png/52/1/pokemon-pokeball-legue-logo-png_seeklogo-524672.png"
+              sx={{ width: '5%', objectFit: 'contain' }}
+            />
+          </Box>
+          : null}
         </Box>
-      </Modal>
-  </Container>)
+        {!selected ?
+          <Box display="flex" justifyContent="space-between" gap={2} mt={10}>
+            {pokemon && pokemon.map((e) =>
+              <Cards pokemon={e} showStats={false} choosePokemon={choosePokemon} selected={selected} />
+            )}
+          </Box>
+          : null}
+        {selected ?
+          <Box display="flex" justifyContent="space-between" mt={5} gap={2}>
+            <Box >
+              {chosenPokemon?.id && <Cards pokemon={chosenPokemon} showStats={true} choosePokemon={choosePokemon} selected={selected} />}
+            </Box>
+            {loadingFight ? <Box alignContent={'center'} ><CircularProgress /></Box> : <Box alignContent={'center'}><Button disabled={loading} sx={{ height: '40px' }} variant="contained" onClick={startFight}>Fight!</Button></Box>}
+            {loading ?
+              <Box alignContent={'center'}>
+                <CircularProgress />
+              </Box> : (defender?.id ? <Cards pokemon={defender} showStats={true} choosePokemon={choosePokemon} selected={defender.id} /> : <Typography>Pokemon</Typography>)}
+          </Box>
+          : null}
+        <Modal
+          keepMounted
+          open={showModal}
+          onClose={handleClose}
+          aria-labelledby="keep-mounted-modal-title"
+          aria-describedby="keep-mounted-modal-description"
+        >
+          <Box sx={style} display='flex' flexDirection='column' justifyContent='center' alignItems='center'>
+            <CardMedia
+              component="img"
+              sx={{ width: '100%', objectFit: 'contain' }}
+              image={winner?.imageUrl} />
+            <Typography id="keep-mounted-modal-title" variant="h6" component="h2" fontSize={35}>
+              {winner?.name + " wins!"}
+            </Typography>
+          </Box>
+        </Modal>
+      </Box>
+    </Container>)
 }
